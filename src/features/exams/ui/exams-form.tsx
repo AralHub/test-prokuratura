@@ -3,7 +3,7 @@ import { Form, Input, InputNumber, Select, Typography } from "antd"
 import { useEffect } from "react"
 import type { ExamChange } from "src/entities/exams"
 import { useCreateExams, useEditExams, type Exam } from "src/entities/exams"
-import type { Subject} from "src/entities/subjects"
+import type { Subject } from "src/entities/subjects"
 import { useGetSubjectsQuery } from "src/entities/subjects"
 import { useFormDevtoolsStore } from "src/shared/store"
 import { FormDrawer } from "src/shared/ui"
@@ -69,35 +69,39 @@ export const ExamsForm = () => {
 				>
 					<InputNumber style={{ width: "100%" }} suffix={"мин"} />
 				</Form.Item>
-				<Form.Item<ExamChange>
-					name={"questions_per_subject"}
-					label={"Количество вопросов"}
-					tooltip={{
-						icon: (
-							<Typography.Text type={"secondary"} style={{ marginLeft: 8 }}>
-								(в одном предмете)
-							</Typography.Text>
-						)
-					}}
-					rules={[{ required: true }]}
-				>
-					<InputNumber style={{ width: "100%" }} />
-				</Form.Item>
-				<Form.Item<ExamChange>
-					name={"subject_ids"}
-					label={"Предметы"}
-					rules={[{ required: true }]}
-				>
-					<Select
-						style={{ width: "100%" }}
-						loading={subjectLoading}
-						options={subject?.data?.map((el: Subject) => ({
-							value: el?.id,
-							label: el?.name
-						}))}
-						mode={"multiple"}
-					/>
-				</Form.Item>
+				{params ? null : (
+					<>
+						<Form.Item<ExamChange>
+							name={"questions_per_subject"}
+							label={"Количество вопросов"}
+							tooltip={{
+								icon: (
+									<Typography.Text type={"secondary"} style={{ marginLeft: 8 }}>
+										(в одном предмете)
+									</Typography.Text>
+								)
+							}}
+							rules={[{ required: true }]}
+						>
+							<InputNumber style={{ width: "100%" }} />
+						</Form.Item>
+						<Form.Item<ExamChange>
+							name={"subject_ids"}
+							label={"Предметы"}
+							rules={[{ required: true }]}
+						>
+							<Select
+								style={{ width: "100%" }}
+								loading={subjectLoading}
+								options={subject?.data?.map((el: Subject) => ({
+									value: el?.id,
+									label: el?.name
+								}))}
+								mode={"multiple"}
+							/>
+						</Form.Item>
+					</>
+				)}
 			</Form>
 		</FormDrawer>
 	)

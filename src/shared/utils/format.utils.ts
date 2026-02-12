@@ -26,7 +26,7 @@ export const formatDate = (value?: string | Dayjs) =>
 
 export const formatCustomDate = (
 	value?: string | Dayjs,
-	format: string = "YYYY-MM-DD"
+	format: string = "YYYY-MM-DD",
 ) => dayjs(value).format(format)
 
 export const formatInputPhone = <T>(value?: T) => `${value}`.replace(/(\d{2})(\d{3})(\d{2})(\d{2})/, "$1 $2 $3 $4")
