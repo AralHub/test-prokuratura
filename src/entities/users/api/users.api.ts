@@ -24,7 +24,11 @@ export const useCreateUsersPhotoMutation = () =>
 		mutationKey: ["users", "user", "photo"],
 		mutationFn: userService.createPhoto,
 		invalidate: {
-			queryKey: ["users", "user"],
+			queryKey: ["users", "user"]
 		},
+		invalidates: [
+			{
+				queryKey: ["auth"]
+			}
+		]
 	})
-	

@@ -1,5 +1,6 @@
+import { SyncOutlined } from "@ant-design/icons"
 import { useQueryClient } from "@tanstack/react-query"
-import { App, Button, Flex, Modal, Select, Space } from "antd"
+import { App, Button, Flex, Modal, Space } from "antd"
 import { useCallback, useEffect, useRef, useState } from "react"
 import Webcam from "react-webcam"
 import { useCreateUsersPhotoMutation } from "src/entities/users/api/users.api"
@@ -41,6 +42,14 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 		}
 	}, [handleDevices, open])
 
+	const switchCamera = useCallback(() => {
+		if (devices.length > 1) {
+			const currentIndex = devices.findIndex((d) => d.deviceId === deviceId)
+			const nextIndex = (currentIndex + 1) % devices.length
+			setDeviceId(devices[nextIndex].deviceId)
+		}
+	}, [devices, deviceId])
+
 	const capture = useCallback(() => {
 		const image = webcamRef.current?.getScreenshot()
 		if (image) {
@@ -79,55 +88,139 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 		<Modal
 			title="Сделать снимок перед тестом"
 			open={open}
+			centered={true}
 			onCancel={onCancel}
 			maskClosable={false}
 			keyboard={false}
 			footer={null}
-			destroyOnClose={true}
+			destroyOnHidden={true}
+			styles={{
+				body: { padding: 0 }
+			}}
 		>
-			<Flex vertical={true} gap={16} align="center">
-				{devices.length > 1 && !imageSrc && (
-					<Select
-						style={{ width: "100%" }}
-						value={deviceId}
-						onChange={(val) => setDeviceId(val)}
-						options={devices.map((device) => ({
-							label: device.label || `Camera ${device.deviceId}`,
-							value: device.deviceId
-						}))}
-					/>
-				)}
-
+			<Flex
+				vertical={true}
+				align="center"
+				justify="center"
+				style={{
+					backgroundColor: "#000",
+					position: "relative",
+					minHeight: 400,
+					borderRadius: 8,
+					overflow: "hidden"
+				}}
+			>
 				{!imageSrc ? (
-					<Webcam
-						audio={false}
-						ref={webcamRef}
-						videoConstraints={{ deviceId: deviceId ? { exact: deviceId } : undefined }}
-						screenshotFormat="image/jpeg"
-						style={{ width: "100%", borderRadius: 8 }}
-					/>
-				) : (
-					<img src={imageSrc} alt="Снимок" style={{ width: "100%", borderRadius: 8 }} />
-				)}
-
-				{!imageSrc ? (
-					<Button type="primary" onClick={capture} block={true} size="large">
-						Сделать снимок
-					</Button>
-				) : (
-					<Space style={{ width: "100%", justifyContent: "center" }}>
-						<Button onClick={retake} size="large">
-							Переснять
-						</Button>
-						<Button
-							type="primary"
-							loading={isPending}
-							onClick={handleUpload}
-							size="large"
+					<>
+						<Webcam
+							audio={false}
+							ref={webcamRef}
+							mirrored={true}
+							videoConstraints={{ deviceId: deviceId ? { exact: deviceId } : undefined }}
+							screenshotFormat="image/jpeg"
+							style={{
+								width: "100%",
+								height: "100%",
+								objectFit: "cover"
+							}}
+						/>
+						{/* Camera UI Overlay */}
+						<div
+							style={{
+								position: "absolute",
+								bottom: 0,
+								left: 0,
+								right: 0,
+								padding: "20px",
+								background: "linear-gradient(transparent, rgba(0,0,0,0.7))",
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "center"
+							}}
 						>
-							Продолжить
-						</Button>
-					</Space>
+							<div
+								onClick={capture}
+								style={{
+									width: 64,
+									height: 64,
+									borderRadius: "50%",
+									border: "4px solid rgba(255,255,255,0.8)",
+									backgroundColor: "rgba(255,255,255,0.3)",
+									cursor: "pointer",
+									display: "flex",
+									justifyContent: "center",
+									alignItems: "center",
+									transition: "transform 0.1s"
+								}}
+								onMouseDown={(e) => {
+									e.currentTarget.style.transform = "scale(0.9)"
+								}}
+								onMouseUp={(e) => {
+									e.currentTarget.style.transform = "scale(1)"
+								}}
+							>
+								<div
+									style={{
+										width: 48,
+										height: 48,
+										borderRadius: "50%",
+										backgroundColor: "white"
+									}}
+								/>
+							</div>
+
+							{devices.length > 1 && (
+								<Button
+									shape="circle"
+									icon={<SyncOutlined />}
+									size="large"
+									onClick={switchCamera}
+									style={{
+										position: "absolute",
+										right: 32,
+										backgroundColor: "rgba(0,0,0,0.5)",
+										color: "white",
+										border: "none"
+									}}
+								/>
+							)}
+						</div>
+					</>
+				) : (
+					<Flex vertical={true} style={{ width: "100%", height: "100%" }}>
+						<img
+							src={imageSrc}
+							alt="Снимок"
+							style={{ width: "100%", height: "100%", objectFit: "cover" }}
+						/>
+						<div
+							style={{
+								position: "absolute",
+								bottom: 0,
+								left: 0,
+								right: 0,
+								padding: "20px",
+								background: "linear-gradient(transparent, rgba(0,0,0,0.7))",
+								display: "flex",
+								justifyContent: "center"
+							}}
+						>
+							<Space size="large">
+								<Button size="large" onClick={retake} style={{ minWidth: 120 }}>
+									Переснять
+								</Button>
+								<Button
+									type="primary"
+									size="large"
+									loading={isPending}
+									onClick={handleUpload}
+									style={{ minWidth: 120 }}
+								>
+									Продолжить
+								</Button>
+							</Space>
+						</div>
+					</Flex>
 				)}
 			</Flex>
 		</Modal>

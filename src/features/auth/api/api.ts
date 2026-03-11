@@ -7,7 +7,7 @@ export const useRegisterMutation = () =>
 	useCrudMutation({
 		mutationFn: authService.register,
 		invalidate: {
-			queryKey: ["register"]
+			queryKey: ["auth"]
 		}
 	})
 
@@ -15,7 +15,7 @@ export const useVerifyMutation = () =>
 	useCrudMutation({
 		mutationFn: authService.verify,
 		invalidate: {
-			queryKey: ["register"]
+			queryKey: ["auth"]
 		}
 	})
 
