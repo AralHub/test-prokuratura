@@ -79,10 +79,7 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 			const formData = new FormData()
 			formData.append("photo", blob, "snapshot.jpg")
 
-			await uploadPhoto({
-				id: user.data.id,
-				formData
-			})
+			await uploadPhoto(formData)
 
 			await queryClient.invalidateQueries({ queryKey: ["auth"] })
 			onSuccess()
@@ -105,7 +102,12 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 			styles={{
 				body: { padding: 0 },
 				content: { padding: 8 },
-				header: { paddingTop: 8, paddingBottom: 8, paddingLeft: 16, paddingRight: 16 }
+				header: {
+					paddingTop: 8,
+					paddingBottom: 8,
+					paddingLeft: 16,
+					paddingRight: 16
+				}
 			}}
 		>
 			<Flex
@@ -116,7 +118,7 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 					backgroundColor: "#000",
 					position: "relative",
 					width: "100%",
-					aspectRatio: "4/3",
+					minHeight: 480,
 					borderRadius: 8,
 					overflow: "hidden"
 				}}
@@ -128,8 +130,7 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 							ref={webcamRef}
 							mirrored={isMirrored}
 							videoConstraints={{
-								deviceId: deviceId ? { exact: deviceId } : undefined,
-								aspectRatio: 4 / 3
+								deviceId: deviceId ? { exact: deviceId } : undefined
 							}}
 							screenshotFormat="image/jpeg"
 							style={{

@@ -7,7 +7,6 @@ import type {
 	User,
 	VerifyFormType
 } from "./types"
-import type { ParamId } from "src/shared/types"
 
 class AuthService {
 	getMe = async (): Promise<ResponseSingleData<User>> => {
@@ -22,11 +21,8 @@ class AuthService {
 		return response.data
 	}
 
-	createPhoto = async (form: {
-		id: ParamId
-		formData: FormData
-	}): Promise<ResponseSingleData<User>> => {
-		const response = await api.post(`/users/me/${form.id}/photo`, form.formData)
+	createPhoto = async (form: FormData): Promise<ResponseSingleData<User>> => {
+		const response = await api.post(`/users/me/photo`, form)
 		return response.data
 	}
 
