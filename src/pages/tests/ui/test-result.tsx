@@ -2,6 +2,7 @@ import type { FC } from "react"
 import { Typography, Space, Image, Spin } from "antd"
 import type { TestResult as TestResultType } from "src/entities/exams"
 import { useGetMeQuery } from "src/features/auth/api/api"
+import { BASE_URL } from "src/shared/config"
 
 const { Title } = Typography
 
@@ -15,7 +16,7 @@ export const TestResult: FC<TestResultType> = ({ total_score }) => {
 			) : (
 				user?.data?.photo_url && (
 					<Image
-						src={user.data.photo_url}
+						src={BASE_URL + user?.data?.photo_url}
 						alt="Фото с тестирования"
 						width={200}
 						style={{ borderRadius: 8, objectFit: "cover" }}
