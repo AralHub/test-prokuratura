@@ -1,22 +1,20 @@
+import { Image, Space, Spin, Typography } from "antd"
 import type { FC } from "react"
-import { Typography, Space, Image, Spin } from "antd"
 import type { TestResult as TestResultType } from "src/entities/exams"
-import { useGetMeQuery } from "src/features/auth/api/api"
 import { BASE_URL } from "src/shared/config"
 
 const { Title } = Typography
 
-export const TestResult: FC<TestResultType> = ({ total_score }) => {
-	const { data: user, isLoading } = useGetMeQuery()
+export const TestResult: FC<TestResultType> = ({ total_score, user, loading }) => {
 
 	return (
 		<Space direction="vertical" size="large" align="center" style={{ width: "100%" }}>
-			{isLoading ? (
+			{loading ? (
 				<Spin />
 			) : (
-				user?.data?.photo_url && (
+				user?.photo_url && (
 					<Image
-						src={BASE_URL + user?.data?.photo_url}
+						src={BASE_URL + user?.photo_url}
 						alt="Фото с тестирования"
 						width={200}
 						style={{ borderRadius: 8, objectFit: "cover" }}

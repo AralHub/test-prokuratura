@@ -1,3 +1,5 @@
+import type { User } from "src/features/auth/model/types"
+
 export type Exam = {
 	id?: number
 	title: string
@@ -54,4 +56,6 @@ export type Answer = {
 
 export type TestResult = {
 	total_score: number
+	user?: User
+	loading?: boolean
 }

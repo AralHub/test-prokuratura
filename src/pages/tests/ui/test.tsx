@@ -9,6 +9,7 @@ import { useToken } from "src/shared/hooks"
 import { Timer } from "./timer"
 import { QuestionNav } from "./question-nav"
 import { css, cx, useResponsive } from "antd-style"
+import { useGetMeQuery } from "src/features/auth/api/api"
 
 const { useApp } = App
 
@@ -30,6 +31,7 @@ export const Test = () => {
 			{ question_id, option_id }
 		])
 	}
+		const { data: user, isLoading: isUserLoading } = useGetMeQuery()
 
 	const handleClick = (key: string) => {
 		const ref = sectionRefs.current[key]
@@ -48,17 +50,17 @@ export const Test = () => {
 	useEffect(() => {
 		if (isSuccess) {
 			modal.success({
-				title: <TestResult total_score={result.data.total_score} />,
+				title: <TestResult user={user?.data} total_score={result.data.total_score} />,
 				maskClosable: false,
 				onOk: () => {
 					navigate({ to: "/tests", replace: true })
 				}
 			})
 		}
-	}, [isSuccess, modal, navigate, result?.data.total_score])
+	}, [isSuccess, modal, navigate, result?.data.total_score, user])
 	return (
 		<>
-			{isLoading || isFetching ? (
+			{isLoading || isFetching || isUserLoading ? (
 				<Skeleton
 					loading={isLoading || isFetching}
 					active={true}

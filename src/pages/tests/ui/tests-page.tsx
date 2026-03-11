@@ -33,12 +33,12 @@ export const TestsPage = () => {
 
 	const { token } = useToken()
 
-	const handleStartTest = () => {
-		if (selectedTestId) {
-			startTest(selectedTestId)
+	const handleStartTest = (id?: number) => {
+		if (id) {
+			startTest(id)
 			navigate({
 				to: "/tests/$testId",
-				params: { testId: String(selectedTestId) }
+				params: { testId: String(id) }
 			})
 			setSelectedTestId(null)
 		}
@@ -121,7 +121,8 @@ export const TestsPage = () => {
 													block={true}
 													disabled={startLoading}
 													type={"primary"}
-													onClick={() => setSelectedTestId(el.id!)}
+													onClick={() => handleStartTest(el?.id)}
+													// onClick={() => setSelectedTestId(el.id!)}
 												>
 													Начать тест
 												</Button>
