@@ -135,7 +135,7 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 							style={{
 								width: "100%",
 								height: "100%",
-								objectFit: "cover"
+								objectFit: "contain"
 							}}
 						/>
 						{/* Camera UI Overlay */}
