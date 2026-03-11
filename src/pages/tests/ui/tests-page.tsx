@@ -12,10 +12,12 @@ import {
 	Spin,
 	Typography
 } from "antd"
+import { useState } from "react"
 import { useGetExamsSubjects, useStartTest } from "src/entities/exams"
 import { useToken } from "src/shared/hooks"
 import { ReloadButton } from "src/shared/ui"
 import { PageHeader } from "src/widgets/page-header"
+import { PhotoCaptureModal } from "./photo-capture-modal"
 
 const getPercent = (current?: number, total?: number) => {
 	if (!current) return 0
@@ -27,8 +29,20 @@ export const TestsPage = () => {
 	const { data: exams, isLoading, isFetching, refetch } = useGetExamsSubjects()
 	const navigate = useNavigate()
 	const { mutate: startTest, isPending: startLoading } = useStartTest()
+	const [selectedTestId, setSelectedTestId] = useState<number | null>(null)
 
 	const { token } = useToken()
+
+	const handleStartTest = () => {
+		if (selectedTestId) {
+			startTest(selectedTestId)
+			navigate({
+				to: "/tests/$testId",
+				params: { testId: String(selectedTestId) }
+			})
+			setSelectedTestId(null)
+		}
+	}
 
 	return (
 		<>
@@ -69,15 +83,6 @@ export const TestsPage = () => {
 										</Space>
 										{el?.passed || el?.is_expired ? (
 											<div>
-												{/* <Typography.Title
-												style={{
-													textAlign: "center",
-													marginBlock: 8,
-													color: token.colorPrimary
-												}}
-											>
-												{el.total_score}/10
-											</Typography.Title> */}
 												<Flex justify={"center"}>
 													<Progress
 														status={
@@ -116,13 +121,7 @@ export const TestsPage = () => {
 													block={true}
 													disabled={startLoading}
 													type={"primary"}
-													onClick={() => {
-														startTest(el.id!)
-														navigate({
-															to: "/tests/$testId",
-															params: { testId: String(el.id!) }
-														})
-													}}
+													onClick={() => setSelectedTestId(el.id!)}
 												>
 													Начать тест
 												</Button>
@@ -137,6 +136,12 @@ export const TestsPage = () => {
 					<Empty />
 				)}
 			</Spin>
+
+			<PhotoCaptureModal
+				open={!!selectedTestId}
+				onCancel={() => setSelectedTestId(null)}
+				onSuccess={handleStartTest}
+			/>
 		</>
 	)
 }

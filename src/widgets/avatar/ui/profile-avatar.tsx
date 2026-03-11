@@ -12,6 +12,7 @@ import Space from "antd/es/space"
 import Typography from "antd/es/typography"
 import { type FC, useEffect } from "react"
 import { useGetMeQuery, useLogoutMutation } from "src/features/auth/api/api"
+import { BASE_URL } from "src/shared/config"
 import { useAuth, useToken } from "src/shared/hooks"
 import { formatPhone, tokenStorage } from "src/shared/utils"
 
@@ -61,7 +62,7 @@ const ProfileAvatar: FC = () => {
 				content={
 					<>
 						<Space>
-							<Avatar icon={<UserOutlined />} />
+							<Avatar src={BASE_URL + profile?.data?.photo_url} icon={<UserOutlined />} />
 							<Flex vertical={true}>
 								<Typography.Text>
 									{isLoading ? "" : profile ? `${profile.data.name}` : ""}
@@ -99,6 +100,7 @@ const ProfileAvatar: FC = () => {
 				<Space style={{ cursor: "pointer" }}>
 					<Avatar
 						size={"large"}
+						src={BASE_URL + profile?.data?.photo_url}
 						icon={
 							isLoading ? (
 								<LoadingOutlined spin={true} />

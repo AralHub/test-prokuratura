@@ -21,7 +21,12 @@ export type LogoutChange = {
 }
 
 export type User = {
+  id: number
 	name: string
 	phone_number: string
 	role: Role
+	
+  is_verified: boolean
+  is_active: boolean
+  photo_url: string
 }

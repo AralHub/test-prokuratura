@@ -21,6 +21,14 @@ class UsersService {
 		const response = await api.get(`/admin/users/${id}/answers`, { params })
 		return response.data
 	}
+
+	createPhoto = async (form: {
+		id: ParamId
+		formData: FormData
+	}): Promise<ResponseSingleData<Users>> => {
+		const response = await api.post(`/admin/users/${form.id}/photo`, form.formData)
+		return response.data
+	}
 }
 
 export const userService = new UsersService()
