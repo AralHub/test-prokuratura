@@ -1,9 +1,9 @@
-import { SyncOutlined } from "@ant-design/icons"
+import { SwapOutlined, SyncOutlined } from "@ant-design/icons"
 import { useQueryClient } from "@tanstack/react-query"
 import { App, Button, Flex, Modal, Space } from "antd"
 import { useCallback, useEffect, useRef, useState } from "react"
 import Webcam from "react-webcam"
-import { useCreateUsersPhotoMutation } from "src/entities/users/api/users.api"
+import { useCreateMePhotoMutation } from "src/features/auth/api/api"
 import { useGetMeQuery } from "src/features/auth/api/api"
 
 type Props = {
@@ -17,14 +17,17 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 	const [devices, setDevices] = useState<MediaDeviceInfo[]>([])
 	const [deviceId, setDeviceId] = useState<string>("")
 	const [imageSrc, setImageSrc] = useState<string | null>(null)
+	const [isMirrored, setIsMirrored] = useState(true)
 	const { data: user } = useGetMeQuery()
-	const { mutateAsync: uploadPhoto, isPending } = useCreateUsersPhotoMutation()
+	const { mutateAsync: uploadPhoto, isPending } = useCreateMePhotoMutation()
 	const { message } = App.useApp()
 	const queryClient = useQueryClient()
 
 	const handleDevices = useCallback(
 		(mediaDevices: MediaDeviceInfo[]) => {
-			const videoDevices = mediaDevices.filter(({ kind }) => kind === "videoinput")
+			const videoDevices = mediaDevices.filter(
+				({ kind }) => kind === "videoinput"
+			)
 			setDevices(videoDevices)
 			if (videoDevices.length > 0 && !deviceId) {
 				setDeviceId(videoDevices[0].deviceId)
@@ -49,6 +52,10 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 			setDeviceId(devices[nextIndex].deviceId)
 		}
 	}, [devices, deviceId])
+
+	const toggleMirror = useCallback(() => {
+		setIsMirrored((prev) => !prev)
+	}, [])
 
 	const capture = useCallback(() => {
 		const image = webcamRef.current?.getScreenshot()
@@ -93,9 +100,12 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 			maskClosable={false}
 			keyboard={false}
 			footer={null}
+			width={480}
 			destroyOnHidden={true}
 			styles={{
-				body: { padding: 0 }
+				body: { padding: 0 },
+				content: { padding: 8 },
+				header: { paddingTop: 8, paddingBottom: 8, paddingLeft: 16, paddingRight: 16 }
 			}}
 		>
 			<Flex
@@ -105,7 +115,8 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 				style={{
 					backgroundColor: "#000",
 					position: "relative",
-					minHeight: 400,
+					width: "100%",
+					aspectRatio: "3/4",
 					borderRadius: 8,
 					overflow: "hidden"
 				}}
@@ -115,8 +126,11 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 						<Webcam
 							audio={false}
 							ref={webcamRef}
-							mirrored={true}
-							videoConstraints={{ deviceId: deviceId ? { exact: deviceId } : undefined }}
+							mirrored={isMirrored}
+							videoConstraints={{
+								deviceId: deviceId ? { exact: deviceId } : undefined,
+								aspectRatio: 3 / 4
+							}}
 							screenshotFormat="image/jpeg"
 							style={{
 								width: "100%",
@@ -138,6 +152,22 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 								justifyContent: "center"
 							}}
 						>
+							<Button
+								shape="circle"
+								icon={<SwapOutlined />}
+								size="large"
+								onClick={toggleMirror}
+								style={{
+									position: "absolute",
+									left: 32,
+									backgroundColor: isMirrored
+										? "rgba(255,255,255,0.8)"
+										: "rgba(0,0,0,0.5)",
+									color: isMirrored ? "black" : "white",
+									border: "none"
+								}}
+							/>
+
 							<div
 								onClick={capture}
 								style={{

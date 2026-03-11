@@ -51,6 +51,20 @@ export const useGetMeQuery = () => {
 	})
 }
 
+export const useCreateMePhotoMutation = () =>
+	useCrudMutation({
+		mutationKey: ["auth", "photo"],
+		mutationFn: authService.createPhoto,
+		invalidate: {
+			queryKey: ["auth"]
+		},
+		onSuccessQueryClient: (queryClient) => {
+			queryClient.refetchQueries({
+				queryKey: ["auth"]
+			})
+		}
+	})
+
 export const useLogoutMutation = () => {
 	// const queryClient = useQueryClient()
 	return useCrudMutation({
