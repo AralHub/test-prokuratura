@@ -100,7 +100,7 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 			maskClosable={false}
 			keyboard={false}
 			footer={null}
-			width={480}
+			width={640}
 			destroyOnHidden={true}
 			styles={{
 				body: { padding: 0 },
@@ -116,7 +116,7 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 					backgroundColor: "#000",
 					position: "relative",
 					width: "100%",
-					aspectRatio: "3/4",
+					aspectRatio: "4/3",
 					borderRadius: 8,
 					overflow: "hidden"
 				}}
@@ -129,7 +129,7 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 							mirrored={isMirrored}
 							videoConstraints={{
 								deviceId: deviceId ? { exact: deviceId } : undefined,
-								aspectRatio: 3 / 4
+								aspectRatio: 4 / 3
 							}}
 							screenshotFormat="image/jpeg"
 							style={{
@@ -221,7 +221,7 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 						<img
 							src={imageSrc}
 							alt="Снимок"
-							style={{ width: "100%", height: "100%", objectFit: "cover" }}
+							style={{ width: "100%", height: "100%", objectFit: "contain" }}
 						/>
 						<div
 							style={{
