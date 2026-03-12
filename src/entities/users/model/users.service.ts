@@ -2,10 +2,16 @@ import type { ResponseData, ResponseSingleData } from "src/shared/api"
 import { api } from "src/shared/api"
 import type { UserAnswer, Users } from "./users.type"
 import type { GetParams, ParamId } from "src/shared/types"
+import type { User } from "src/features/auth/model/types"
 
 class UsersService {
 	get = async (): Promise<ResponseData<Users>> => {
 		const response = await api.get("/admin/users/attempts")
+		return response.data
+	}
+	
+	getUsers = async (params: GetParams): Promise<ResponseData<User>> => {
+		const response = await api.get("/admin/users", { params })
 		return response.data
 	}
 

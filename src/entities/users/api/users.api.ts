@@ -4,6 +4,9 @@ import { userService } from "../model/users.service"
 
 export const useGetUsersList = () =>
 	useCrudQuery({ queryFn: userService.get, queryKey: ["users"] })
+	
+export const useGetUsers = (params: GetParams) =>
+	useCrudQuery({ queryFn: () => userService.getUsers(params), queryKey: ["users", "info", ...Object.values(params)] })
 
 export const useGetUsersById = (id: ParamId) =>
 	useCrudQuery({

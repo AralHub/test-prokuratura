@@ -1,12 +1,15 @@
 export type Users = {
 	id: number
 	name: string
+	photo_url: string | null
 	exams: {
 		id: number
 		title: string
 		total_score: number
 		total_time: number
 		questions_count: number
+		started_at: string
+		ended_at: string
 	}[]
 }
 
