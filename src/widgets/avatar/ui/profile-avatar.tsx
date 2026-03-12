@@ -16,7 +16,11 @@ import { BASE_URL } from "src/shared/config"
 import { useAuth, useToken } from "src/shared/hooks"
 import { formatPhone, tokenStorage } from "src/shared/utils"
 
-const ProfileAvatar: FC = () => {
+interface ProfileAvatarProps {
+	onEditAvatar?: () => void
+}
+
+const ProfileAvatar: FC<ProfileAvatarProps> = () => {
 	const navigate = useNavigate()
 	const auth = useAuth()
 	const { data: profile, isLoading } = useGetMeQuery()

@@ -1,6 +1,7 @@
 import {
 	BarChartOutlined,
 	BookOutlined,
+	CameraOutlined,
 	HomeOutlined,
 	MenuOutlined,
 	OrderedListOutlined,
@@ -14,11 +15,19 @@ import {
 	useNavigate
 } from "@tanstack/react-router"
 import type { MenuProps } from "antd"
-import { Button, Drawer, Flex, Image, Layout, Menu, Typography } from "antd"
+import {
+	Button,
+	Drawer,
+	Flex,
+	Image,
+	Layout,
+	Menu,
+	Space,
+	Typography
+} from "antd"
 import { useResponsive } from "antd-style"
 import type { FC, PropsWithChildren } from "react"
 import { useEffect, useState } from "react"
-import { useGetMeQuery } from "src/features/auth/api/api"
 import { PhotoCaptureModal } from "src/pages/tests/ui/photo-capture-modal"
 import { useAuth, useToken } from "src/shared/hooks"
 import { ProfileAvatar } from "src/widgets/avatar"
@@ -158,7 +167,6 @@ function RouteComponent() {
 	const navigate = useNavigate()
 	const { pathname } = useLocation()
 	const { isAuth, role } = useAuth()
-	const { data: profile } = useGetMeQuery()
 
 	useEffect(() => {
 		setCollapsed(mobile ?? false)
@@ -258,7 +266,23 @@ function RouteComponent() {
 								<MenuOutlined style={{ fontSize: sizeMD, cursor: "pointer" }} />
 							}
 						/>
-						{isAuth && <ProfileAvatar />}
+						{isAuth ? (
+							<Space>
+								<Button
+									onClick={() => setIsModalOpen(true)}
+									variant={"filled"}
+									color={"primary"}
+									size={"large"}
+									icon={
+										<CameraOutlined
+											style={{ fontSize: sizeMD, cursor: "pointer" }}
+										/>
+									}
+									children={"Камера"}
+								/>
+								<ProfileAvatar />
+							</Space>
+						) : null}
 					</Flex>
 				</Header>
 				<Content>
@@ -272,7 +296,7 @@ function RouteComponent() {
 				</Content>
 			</Layout>
 			<PhotoCaptureModal
-				open={!profile?.data?.photo_url || isModalOpen}
+				open={isModalOpen}
 				onCancel={() => setIsModalOpen(false)}
 			/>
 		</Layout>
