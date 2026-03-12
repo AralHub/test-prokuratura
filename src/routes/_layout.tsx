@@ -14,18 +14,12 @@ import {
 	useNavigate
 } from "@tanstack/react-router"
 import type { MenuProps } from "antd"
-import {
-	Button,
-	Drawer,
-	Flex,
-	Image,
-	Layout,
-	Menu,
-	Typography
-} from "antd"
+import { Button, Drawer, Flex, Image, Layout, Menu, Typography } from "antd"
 import { useResponsive } from "antd-style"
 import type { FC, PropsWithChildren } from "react"
 import { useEffect, useState } from "react"
+import { useGetMeQuery } from "src/features/auth/api/api"
+import { PhotoCaptureModal } from "src/pages/tests/ui/photo-capture-modal"
 import { useAuth, useToken } from "src/shared/hooks"
 import { ProfileAvatar } from "src/widgets/avatar"
 
@@ -157,16 +151,25 @@ const SiderbarContainer: FC<
 function RouteComponent() {
 	const { mobile } = useResponsive()
 	const [collapsed, setCollapsed] = useState(false)
+	const [isModalOpen, setIsModalOpen] = useState(false)
 	const {
 		token: { colorWhite, sizeMD, colorBgContainer, colorBorder }
 	} = useToken()
 	const navigate = useNavigate()
 	const { pathname } = useLocation()
 	const { isAuth, role } = useAuth()
+	const { data: profile } = useGetMeQuery()
 
 	useEffect(() => {
 		setCollapsed(mobile ?? false)
 	}, [mobile])
+
+	useEffect(() => {
+		if (!Boolean(profile?.data?.photo_url)) {
+			setIsModalOpen(true)
+		}
+		setIsModalOpen(false)
+	}, [profile])
 
 	return (
 		<Layout hasSider={true}>
@@ -194,10 +197,7 @@ function RouteComponent() {
 							style={{ flexShrink: 0 }}
 						/>
 						<Flex vertical={true}>
-							<Title
-								level={3}
-								style={{ whiteSpace: "nowrap" }}
-							>
+							<Title level={3} style={{ whiteSpace: "nowrap" }}>
 								Прокуратура
 							</Title>
 							{/* <Title
@@ -238,7 +238,6 @@ function RouteComponent() {
 			</SiderbarContainer>
 			<Layout
 				style={{
-					// backgroundColor: colorBgContainer,
 					minHeight: "100vh"
 				}}
 			>
@@ -248,7 +247,7 @@ function RouteComponent() {
 						height: 76,
 						padding: "16px 24px",
 						lineHeight: 1,
-						borderBottom: `1px solid ${colorBorder}`,
+						borderBottom: `1px solid ${colorBorder}`
 					}}
 				>
 					<Flex
@@ -269,11 +268,19 @@ function RouteComponent() {
 					</Flex>
 				</Header>
 				<Content>
-					<Flex vertical={true} gap={mobile ? 16 : 24} style={{ padding: mobile ? 16 : 24 }}>
+					<Flex
+						vertical={true}
+						gap={mobile ? 16 : 24}
+						style={{ padding: mobile ? 16 : 24 }}
+					>
 						<Outlet />
 					</Flex>
 				</Content>
 			</Layout>
+			<PhotoCaptureModal
+				open={isModalOpen}
+				onCancel={() => setIsModalOpen(false)}
+			/>
 		</Layout>
 	)
 }

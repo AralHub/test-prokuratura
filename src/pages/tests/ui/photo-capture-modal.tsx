@@ -5,14 +5,14 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import Webcam from "react-webcam"
 import { useCreateMePhotoMutation } from "src/features/auth/api/api"
 import { useGetMeQuery } from "src/features/auth/api/api"
+import cameraFace from "src/shared/assets/camera-face.png"
 
 type Props = {
 	open: boolean
 	onCancel: () => void
-	onSuccess: () => void
 }
 
-export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
+export const PhotoCaptureModal = ({ open, onCancel }: Props) => {
 	const webcamRef = useRef<Webcam>(null)
 	const [devices, setDevices] = useState<MediaDeviceInfo[]>([])
 	const [deviceId, setDeviceId] = useState<string>("")
@@ -72,7 +72,6 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 		if (!imageSrc || !user?.data?.id) return
 
 		try {
-			// Convert base64 to Blob
 			const res = await fetch(imageSrc)
 			const blob = await res.blob()
 
@@ -82,7 +81,6 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 			await uploadPhoto(formData)
 
 			await queryClient.invalidateQueries({ queryKey: ["auth"] })
-			onSuccess()
 		} catch {
 			message.error("Ошибка при загрузке фото")
 		}
@@ -115,7 +113,10 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 				align="center"
 				justify="center"
 				style={{
-					backgroundColor: "#000",
+					backgroundImage: `url(${cameraFace}`,
+					backgroundRepeat: "no-repeat",
+					backgroundSize: "cover",
+					backgroundPosition: "center -20px",
 					position: "relative",
 					width: "100%",
 					minHeight: 480,
@@ -139,6 +140,7 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 								objectFit: "contain"
 							}}
 						/>
+
 						{/* Camera UI Overlay */}
 						<div
 							style={{
@@ -147,7 +149,7 @@ export const PhotoCaptureModal = ({ open, onCancel, onSuccess }: Props) => {
 								left: 0,
 								right: 0,
 								padding: "20px",
-								background: "linear-gradient(transparent, rgba(0,0,0,0.7))",
+								// background: "linear-gradient(transparent, rgba(0,0,0,0.7))",
 								display: "flex",
 								alignItems: "center",
 								justifyContent: "center"

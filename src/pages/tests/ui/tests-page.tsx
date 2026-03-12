@@ -12,12 +12,10 @@ import {
 	Spin,
 	Typography
 } from "antd"
-import { useState } from "react"
 import { useGetExamsSubjects, useStartTest } from "src/entities/exams"
 import { useToken } from "src/shared/hooks"
 import { ReloadButton } from "src/shared/ui"
 import { PageHeader } from "src/widgets/page-header"
-import { PhotoCaptureModal } from "./photo-capture-modal"
 
 const getPercent = (current?: number, total?: number) => {
 	if (!current) return 0
@@ -29,19 +27,15 @@ export const TestsPage = () => {
 	const { data: exams, isLoading, isFetching, refetch } = useGetExamsSubjects()
 	const navigate = useNavigate()
 	const { mutate: startTest, isPending: startLoading } = useStartTest()
-	const [selectedTestId, setSelectedTestId] = useState<number | null>(null)
 
 	const { token } = useToken()
 
-	const handleStartTest = () => {
-		if (selectedTestId) {
-			startTest(selectedTestId)
-			navigate({
-				to: "/tests/$testId",
-				params: { testId: String(selectedTestId) }
-			})
-			setSelectedTestId(null)
-		}
+	const handleStartTest = (id: number) => {
+		startTest(id)
+		navigate({
+			to: "/tests/$testId",
+			params: { testId: String(id) }
+		})
 	}
 
 	return (
@@ -60,10 +54,7 @@ export const TestsPage = () => {
 				{exams?.data?.length ? (
 					<Row gutter={24} style={{ rowGap: 24 }}>
 						{exams?.data?.map((el, index) => {
-							const percent = getPercent(
-								el?.total_score,
-								el?.questions_count
-							)
+							const percent = getPercent(el?.total_score, el?.questions_count)
 							return (
 								<Col xs={24} sm={12} md={12} lg={12} xl={8} xxl={6} key={index}>
 									<Card variant={"outlined"}>
@@ -78,7 +69,8 @@ export const TestsPage = () => {
 												<ClockCircleOutlined /> {el?.time_limit_minutes} мин
 											</div>
 											<div>
-												<QuestionCircleOutlined /> {el?.questions_count} вопросов
+												<QuestionCircleOutlined /> {el?.questions_count}{" "}
+												вопросов
 											</div>
 										</Space>
 										{el?.passed || el?.is_expired ? (
@@ -121,7 +113,7 @@ export const TestsPage = () => {
 													block={true}
 													disabled={startLoading}
 													type={"primary"}
-													onClick={() => setSelectedTestId(el.id!)}
+													onClick={() => handleStartTest(el.id!)}
 												>
 													Начать тест
 												</Button>
@@ -136,12 +128,6 @@ export const TestsPage = () => {
 					<Empty />
 				)}
 			</Spin>
-
-			<PhotoCaptureModal
-				open={!!selectedTestId}
-				onCancel={() => setSelectedTestId(null)}
-				onSuccess={handleStartTest}
-			/>
 		</>
 	)
 }
