@@ -88,7 +88,12 @@ export const PhotoCaptureModal = ({ open, onCancel }: Props) => {
 			const formData = new FormData()
 			formData.append("photo", blob, "snapshot.jpg")
 
-			await uploadPhoto(formData)
+			await uploadPhoto(formData, {
+				onSuccess: () => {
+					setImageSrc("")
+					onCancel()
+				}
+			})
 
 			await queryClient.invalidateQueries({ queryKey: ["auth"] })
 		} catch {
