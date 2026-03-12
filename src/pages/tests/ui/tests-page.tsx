@@ -27,7 +27,6 @@ export const TestsPage = () => {
 	const { data: exams, isLoading, isFetching, refetch } = useGetExamsSubjects()
 	const navigate = useNavigate()
 	const { mutate: startTest, isPending: startLoading } = useStartTest()
-
 	const { token } = useToken()
 
 	const handleStartTest = (id: number) => {
