@@ -97,6 +97,7 @@ export const QuestionsPage = () => {
 										borderRadius: 5,
 										whiteSpace: "wrap"
 									}}
+									color={question?.is_correct ? "green" : "default"}
 									key={question.text}
 								>
 									{question.text}
