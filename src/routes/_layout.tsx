@@ -164,13 +164,6 @@ function RouteComponent() {
 		setCollapsed(mobile ?? false)
 	}, [mobile])
 
-	useEffect(() => {
-		if (!Boolean(profile?.data?.photo_url)) {
-			setIsModalOpen(true)
-		}
-		setIsModalOpen(false)
-	}, [profile])
-
 	return (
 		<Layout hasSider={true}>
 			<SiderbarContainer
