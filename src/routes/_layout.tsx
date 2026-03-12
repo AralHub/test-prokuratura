@@ -272,7 +272,7 @@ function RouteComponent() {
 				</Content>
 			</Layout>
 			<PhotoCaptureModal
-				open={!Boolean(profile?.data?.photo_url) || isModalOpen}
+				open={!profile?.data?.photo_url || isModalOpen}
 				onCancel={() => setIsModalOpen(false)}
 			/>
 		</Layout>
