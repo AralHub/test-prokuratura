@@ -16,7 +16,7 @@ export type Users = {
 export type UserAnswer = {
 	question_id: number
 	question_text: string
-	selected_option_id: number
+	selected_option_id: number[]
 	is_correct: boolean
 	options: {
 		option_id: number

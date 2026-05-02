@@ -1,18 +1,18 @@
-import React, { useEffect, useRef, useState } from "react"
 import { Progress, Typography } from "antd"
+import React, { useEffect, useRef, useState } from "react"
 import { useToken } from "src/shared/hooks"
 
 const { Text } = Typography
 
 type TimerProps = {
-	started_at?: string
-	ended_at?: string
+	startedAt?: string
+	endedAt?: string
 	onFinish: () => void
 }
 
 export const Timer: React.FC<TimerProps> = ({
-	started_at,
-	ended_at,
+	startedAt,
+	endedAt,
 	onFinish
 }) => {
 	const {
@@ -30,16 +30,16 @@ export const Timer: React.FC<TimerProps> = ({
 	}
 
 	useEffect(() => {
-		if (!started_at || !ended_at) return
+		if (!startedAt || !endedAt) return
 
 		const now = new Date()
-		const end = new Date(ended_at)
-		const total = getTotalSeconds(started_at, ended_at)
+		const end = new Date(endedAt)
+		const total = getTotalSeconds(startedAt, endedAt)
 		const remaining = Math.floor((end.getTime() - now.getTime()) / 1000)
 
 		setTotalSeconds(total)
 		setRemainingSeconds(remaining > 0 ? remaining : 0)
-	}, [started_at, ended_at])
+	}, [startedAt, endedAt])
 
 	useEffect(() => {
 		if (remainingSeconds === null || remainingSeconds === 0) return
@@ -58,13 +58,13 @@ export const Timer: React.FC<TimerProps> = ({
 	}, [remainingSeconds])
 
 	useEffect(() => {
-		if (remainingSeconds === 2 && !hasFinished.current) {
+		if (remainingSeconds && remainingSeconds <= 2 && !hasFinished.current) {
 			hasFinished.current = true
 			onFinish()
 		}
 	}, [remainingSeconds, onFinish])
 
-	if (!started_at || !ended_at || remainingSeconds === null) return null
+	if (!startedAt || !endedAt || remainingSeconds === null) return null
 
 	const percent = (remainingSeconds / totalSeconds) * 100
 	const minutes = Math.floor(remainingSeconds / 60)

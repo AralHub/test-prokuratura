@@ -164,7 +164,7 @@ function RouteComponent() {
 												<Badge
 													key={index}
 													status={
-														item.selected_option_id === el.option_id
+														item?.selected_option_id?.includes?.(el?.option_id)
 															? item.is_correct
 																? "success"
 																: "error"

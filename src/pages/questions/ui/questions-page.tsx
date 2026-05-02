@@ -1,6 +1,7 @@
 import { ArrowLeftOutlined, CameraOutlined } from "@ant-design/icons"
 import { useNavigate, useParams } from "@tanstack/react-router"
 import { Button, Card, Flex, Image, Space, Tag, Typography, Upload } from "antd"
+import { useGetExamsList } from "src/entities/exams"
 import {
 	useAddImage,
 	useDeleteQuestionByExam,
@@ -8,7 +9,12 @@ import {
 } from "src/entities/questions"
 import { QuestionsForm } from "src/features/questions"
 import { useToken } from "src/shared/hooks"
-import { AddButton, DeleteButton, EditButton, ReloadButton } from "src/shared/ui"
+import {
+	AddButton,
+	DeleteButton,
+	EditButton,
+	ReloadButton
+} from "src/shared/ui"
 
 const { Title } = Typography
 
@@ -17,6 +23,10 @@ export const QuestionsPage = () => {
 	const {
 		token: { colorWhite }
 	} = useToken()
+	const { data: exams } = useGetExamsList()
+
+	const exam = exams?.data?.find((item) => Number(item?.id) === Number(examId))
+
 	const { data: questions, refetch, isFetching } = useGetAdminQuestions(examId)
 	const { mutate: deleteQuestion } = useDeleteQuestionByExam(examId)
 	const { mutate: addImage } = useAddImage()
@@ -31,7 +41,7 @@ export const QuestionsPage = () => {
 							style={{ marginRight: 20 }}
 							onClick={() => navigate({ to: "/exams" })}
 						/>
-						Вопросы
+						Вопросы экзамена: {exam?.title}
 					</Title>
 					<Space>
 						<AddButton text="Добавить вопрос" />

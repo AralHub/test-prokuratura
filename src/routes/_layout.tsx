@@ -5,7 +5,7 @@ import {
 	HomeOutlined,
 	MenuOutlined,
 	OrderedListOutlined,
-	UserOutlined
+	UserAddOutlined
 } from "@ant-design/icons"
 import {
 	createFileRoute,
@@ -15,21 +15,14 @@ import {
 	useNavigate
 } from "@tanstack/react-router"
 import type { MenuProps } from "antd"
-import {
-	Button,
-	Drawer,
-	Flex,
-	Image,
-	Layout,
-	Menu,
-	Space,
-	Typography
-} from "antd"
+import { Button, Drawer, Flex, Image, Layout, Menu, Space } from "antd"
 import { useResponsive } from "antd-style"
+import Title from "antd/es/typography/Title"
 import type { FC, PropsWithChildren } from "react"
 import { useEffect, useState } from "react"
 import { PhotoCaptureModal } from "src/pages/tests/ui/photo-capture-modal"
 import { useAuth, useToken } from "src/shared/hooks"
+import { useCameraStore } from "src/shared/store"
 import { ProfileAvatar } from "src/widgets/avatar"
 
 export const Route = createFileRoute("/_layout")({
@@ -44,8 +37,11 @@ export const Route = createFileRoute("/_layout")({
 	}
 })
 
-const { Title } = Typography
 const { Header, Content, Sider } = Layout
+
+const getIsAdmin = (role?: string | null) => {
+	return role && ["admin", "superadmin"]?.includes(role)
+}
 
 const itemsAdmin: MenuProps["items"] = [
 	{
@@ -73,9 +69,14 @@ const itemsAdmin: MenuProps["items"] = [
 		icon: <BookOutlined style={{ fontSize: 16 }} />,
 		label: "Предметы"
 	},
+	// {
+	// 	key: "/users",
+	// 	icon: <TeamOutlined style={{ fontSize: 16 }} />,
+	// 	label: "Пользователи"
+	// },
 	{
-		key: "/users",
-		icon: <UserOutlined style={{ fontSize: 16 }} />,
+		key: "/users-results",
+		icon: <UserAddOutlined style={{ fontSize: 16 }} />,
 		label: "Результаты"
 	},
 	{
@@ -160,7 +161,7 @@ const SiderbarContainer: FC<
 function RouteComponent() {
 	const { mobile } = useResponsive()
 	const [collapsed, setCollapsed] = useState(false)
-	const [isModalOpen, setIsModalOpen] = useState(false)
+	const { isModalOpen, setIsModalOpen } = useCameraStore()
 	const {
 		token: { colorWhite, sizeMD, colorBgContainer, colorBorder }
 	} = useToken()
@@ -174,69 +175,73 @@ function RouteComponent() {
 
 	return (
 		<Layout hasSider={true}>
-			<SiderbarContainer
-				collapsed={collapsed}
-				toggleCollapsed={() => setCollapsed((prev) => !prev)}
-			>
-				<nav
-					style={{
-						paddingInline: 20
-					}}
-				>
-					<Flex
-						align="center"
-						style={{
-							paddingBlock: 16
-						}}
-						gap={8}
+			{getIsAdmin(role) ? (
+				<>
+					<SiderbarContainer
+						collapsed={collapsed}
+						toggleCollapsed={() => setCollapsed((prev) => !prev)}
 					>
-						<Image
-							src={"/pro-logo.png"}
-							fallback={"/public/pro-logo.png"}
-							preview={false}
-							height={64}
-							style={{ flexShrink: 0 }}
-						/>
-						<Flex vertical={true}>
-							<Title level={3} style={{ whiteSpace: "nowrap" }}>
-								Прокуратура
-							</Title>
-							{/* <Title
+						<nav
+							style={{
+								paddingInline: 20
+							}}
+						>
+							<Flex
+								align="center"
+								style={{
+									paddingBlock: 16
+								}}
+								gap={8}
+							>
+								<Image
+									src={"/pro-logo.png"}
+									fallback={"/public/pro-logo.png"}
+									preview={false}
+									height={64}
+									style={{ flexShrink: 0 }}
+								/>
+								<Flex vertical={true}>
+									<Title level={3} style={{ whiteSpace: "nowrap" }}>
+										Прокуратура
+									</Title>
+									{/* <Title
 							level={4}
 							style={{ color: colorPrimary, whiteSpace: "nowrap" }}
 						>
 							academy
 						</Title> */}
-						</Flex>
-					</Flex>
-					<Menu
-						theme={"light"}
-						onClick={(e) => {
-							navigate({ to: e.key })
-							if (mobile) {
-								setCollapsed(true)
-							}
-						}}
-						mode={"inline"}
-						style={{
-							backgroundColor: colorWhite,
-							fontSize: 16,
-							overflowY: "auto",
-							height: "calc(100vh - 96px)",
-							scrollbarWidth: "thin"
-						}}
-						selectedKeys={[pathname]}
-						items={
-							(role === "admin" ? itemsAdmin : items)?.map((el) => ({
-								...el,
-								style: {
-									marginBottom: 20
+								</Flex>
+							</Flex>
+							<Menu
+								theme={"light"}
+								onClick={(e) => {
+									navigate({ to: e.key })
+									if (mobile) {
+										setCollapsed(true)
+									}
+								}}
+								mode={"inline"}
+								style={{
+									backgroundColor: colorWhite,
+									fontSize: 16,
+									overflowY: "auto",
+									height: "calc(100vh - 96px)",
+									scrollbarWidth: "thin"
+								}}
+								selectedKeys={[pathname]}
+								items={
+									(getIsAdmin(role) ? itemsAdmin : items)?.map((el) => ({
+										...el,
+										style: {
+											marginBottom: 20
+										}
+									})) as MenuProps["items"]
 								}
-							})) as MenuProps["items"]
-						}
-					/>
-				</nav>
-			</SiderbarContainer>
+							/>
+						</nav>
+					</SiderbarContainer>
+				</>
+			) : null}
 			<Layout
 				style={{
 					// backgroundColor: colorBgContainer,
@@ -257,15 +262,46 @@ function RouteComponent() {
 						align={"center"}
 						style={{ height: "100%" }}
 					>
-						<Button
-							onClick={() => setCollapsed((prev) => !prev)}
-							type={"text"}
-							size={"large"}
-							shape={"circle"}
-							icon={
-								<MenuOutlined style={{ fontSize: sizeMD, cursor: "pointer" }} />
-							}
-						/>
+						{getIsAdmin(role) ? (
+							<Button
+								onClick={() => setCollapsed((prev) => !prev)}
+								type={"text"}
+								size={"large"}
+								shape={"circle"}
+								icon={
+									<MenuOutlined
+										style={{ fontSize: sizeMD, cursor: "pointer" }}
+									/>
+								}
+							/>
+						) : (
+							<Flex
+								align="center"
+								style={{
+									paddingBlock: 16
+								}}
+								gap={8}
+							>
+								<Image
+									src={"/pro-logo.png"}
+									fallback={"/public/pro-logo.png"}
+									preview={false}
+									height={64}
+									style={{ flexShrink: 0 }}
+								/>
+								<Flex vertical={true}>
+									<Title level={3} style={{ whiteSpace: "nowrap" }}>
+										Прокуратура
+									</Title>
+									{/* <Title
+							level={4}
+							style={{ color: colorPrimary, whiteSpace: "nowrap" }}
+						>
+							academy
+						</Title> */}
+								</Flex>
+							</Flex>
+						)}
 						{isAuth ? (
 							<Space>
 								<Button

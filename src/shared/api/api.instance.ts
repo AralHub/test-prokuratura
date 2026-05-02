@@ -1,14 +1,13 @@
 import axios, { type AxiosError } from "axios"
-import { BASE_URL } from "src/shared/config"
 import { tokenStorage } from "src/shared/utils"
 import { refreshAccessToken } from "./api.service"
 
 const api = axios.create({
-	baseURL: `${BASE_URL}/api/v1`
+	baseURL: `https://api.test.qrprokuratura.uz/api/v1`
 })
 
 const classic = axios.create({
-	baseURL: `${BASE_URL}/api/v1`
+	baseURL: `https://api.test.qrprokuratura.uz/api/v1`
 })
 
 api.interceptors.request.use((config) => {

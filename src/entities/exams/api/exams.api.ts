@@ -13,6 +13,11 @@ export const useGetExamsList = () =>
 		queryFn: examsService.get,
 		queryKey: ["exams"]
 	})
+export const useGetExamsById = (id: ParamId) =>
+	useCrudQuery({
+		queryFn: () => examsService.getById(id),
+		queryKey: ["exams", "by-id", id]
+	})
 
 export const useGetExamsListByUserId = (id: ParamId) =>
 	useCrudQuery({
@@ -20,12 +25,10 @@ export const useGetExamsListByUserId = (id: ParamId) =>
 		queryKey: ["exams", "user", id]
 	})
 
-export const useGetExamsStats = (
-	params: GetParams = {}
-) =>
+export const useGetExamsStats = (params: GetParams = {}) =>
 	useCrudQuery({
 		queryFn: () => examsService.getStats(params),
-		queryKey: ["exams", "stats", ...Object.values(params)],
+		queryKey: ["exams", "stats", ...Object.values(params)]
 	})
 
 export const useEditExams = () =>
@@ -54,7 +57,10 @@ export const useDeleteExams = () =>
 	})
 
 export const useGetExamsSubjects = () =>
-	useCrudQuery({ queryFn: examsService.getExams, queryKey: ["exams", "subjects"] })
+	useCrudQuery({
+		queryFn: examsService.getExams,
+		queryKey: ["exams", "subjects"]
+	})
 
 export const useStartTest = () =>
 	useCrudMutation({

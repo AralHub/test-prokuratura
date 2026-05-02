@@ -1,12 +1,12 @@
 import { PhoneOutlined } from "@ant-design/icons"
 import { Link, useNavigate } from "@tanstack/react-router"
 import type { FormProps } from "antd"
-import { Input, Form, Divider, Button, InputNumber, Typography } from "antd"
+import { Button, Form, Input, InputNumber, Typography } from "antd"
 import { useEffect } from "react"
 import { useAuth, useToken } from "src/shared/hooks"
 import { formatFormPhone, formatInputPhone } from "src/shared/utils"
-import type { LoginFormType } from "../model/types"
 import { useLoginMutation } from "../api/api"
+import type { LoginFormType } from "../model/types"
 
 const { Password: InputPassword } = Input
 
@@ -85,13 +85,12 @@ export const LoginForm = () => {
 			>
 				<InputPassword placeholder={"Пароль"} />
 			</Form.Item>
-			<Typography.Paragraph>
+			<Typography.Paragraph style={{ marginBottom: 24 }}>
 				У вас нет аккаунта?{" "}
 				<Link to="/auth/register" style={{ color: colorPrimary }}>
 					Зарегистрируйтесь
 				</Link>
 			</Typography.Paragraph>
-			<Divider style={{ marginBlock: 8 }} />
 			<Form.Item noStyle={true}>
 				<Button
 					loading={loginLoading}

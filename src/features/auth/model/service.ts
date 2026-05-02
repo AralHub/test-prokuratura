@@ -1,4 +1,4 @@
-import type { ResponseSingleData, Tokens } from "src/shared/api"
+import type { ResponseData, ResponseSingleData, Tokens } from "src/shared/api"
 import { api, classic } from "src/shared/api"
 import type {
 	LoginFormType,
@@ -11,6 +11,11 @@ import type {
 class AuthService {
 	getMe = async (): Promise<ResponseSingleData<User>> => {
 		const response = await api.get(`/users/me`)
+		return response.data
+	}
+	
+	getAdmins = async (): Promise<ResponseData<User>> => {
+		const response = await api.get(`/auth/admins`)
 		return response.data
 	}
 

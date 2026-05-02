@@ -1,16 +1,16 @@
 import type { FormProps } from "antd"
 import { Form, Input } from "antd"
 import { useEffect } from "react"
+import type { SubjectChange, Subject } from "src/entities/subjects"
 import {
 	useCreateSubjectsMutation,
-	useEditSubjectsMutation,
-	type Subject
+	useEditSubjectsMutation
 } from "src/entities/subjects"
 import { useFormDevtoolsStore } from "src/shared/store"
 import { FormDrawer } from "src/shared/ui"
 
 export const SubjectsForm = () => {
-	const [form] = Form.useForm<Subject>()
+	const [form] = Form.useForm<SubjectChange>()
 	const {
 		mutate: addSubject,
 		isPending: addPending,
@@ -25,7 +25,7 @@ export const SubjectsForm = () => {
 
 	const params = useFormDevtoolsStore((state) => state.getParams<Subject>())
 
-	const onFinish: FormProps<Subject>["onFinish"] = (values) => {
+	const onFinish: FormProps<SubjectChange>["onFinish"] = (values) => {
 		if (params) {
 			editSubject({
 				...values,
@@ -50,8 +50,20 @@ export const SubjectsForm = () => {
 				autoComplete={"off"}
 				layout={"vertical"}
 			>
-				<Form.Item<Subject> name={"name"} label={"Название предмета"}>
+				<Form.Item<SubjectChange>
+					name={"name"}
+					label={"Название предмета"}
+					rules={[{ required: true }]}
+				>
 					<Input />
+				</Form.Item>
+
+				<Form.Item<SubjectChange>
+					name={"description"}
+					label={"Описание предмета"}
+					rules={[{ required: true }]}
+				>
+					<Input.TextArea rows={3} />
 				</Form.Item>
 			</Form>
 		</FormDrawer>

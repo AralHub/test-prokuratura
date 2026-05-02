@@ -4,6 +4,12 @@ export type QuestionCreate = {
 	options: Variant[]
 	subject_id?: number
 	question_ids?: number[]
+	
+	type?: string
+	slots?: {
+		variantKey: string
+		sequence_order: number
+	}[]
 }
 
 export type QuestionGenerate = {
@@ -26,6 +32,8 @@ export type QuestionsData = {
 export type Questions = {
 	id: number
 	text: string
+	type: "single" | "multiple" | "drag"
+	count?: number
 	image_url?: string
 	options: Variant[]
 }

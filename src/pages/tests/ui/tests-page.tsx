@@ -13,7 +13,9 @@ import {
 	Typography
 } from "antd"
 import { useGetExamsSubjects, useStartTest } from "src/entities/exams"
-import { useToken } from "src/shared/hooks"
+import { useGetMeQuery } from "src/features/auth/api/api"
+import { useMessage, useToken } from "src/shared/hooks"
+import { useCameraStore } from "src/shared/store"
 import { ReloadButton } from "src/shared/ui"
 import { PageHeader } from "src/widgets/page-header"
 
@@ -28,13 +30,27 @@ export const TestsPage = () => {
 	const navigate = useNavigate()
 	const { mutate: startTest, isPending: startLoading } = useStartTest()
 	const { token } = useToken()
+	const { message } = useMessage()
+	const { setIsModalOpen } = useCameraStore()
+	
+
+	const { data: user } = useGetMeQuery()
 
 	const handleStartTest = (id: number) => {
-		startTest(id)
-		navigate({
-			to: "/tests/$testId",
-			params: { testId: String(id) }
-		})
+		if (user?.data?.photo_url) {
+			startTest(id)
+			navigate({
+				to: "/tests/$testId",
+				params: { testId: String(id) }
+			})
+		} else {
+			message.error({
+				message: "Ошибка",
+				description:
+					"Для начала теста необходимо загрузить фото профиля. Пожалуйста, загрузите фото в настройках профиля."
+			})
+			setIsModalOpen(true)
+		}
 	}
 
 	return (

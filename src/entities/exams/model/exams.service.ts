@@ -8,6 +8,10 @@ class ExamsService {
 		const response = await api.get("/admin/exams")
 		return response.data
 	}
+	getById = async (id: ParamId): Promise<ResponseSingleData<Exam>> => {
+		const response = await api.get(`/admin/exams/${id}`)
+		return response.data
+	}
 	getByUserId = async (id: ParamId): Promise<ResponseData<Exam>> => {
 		const response = await api.get(`/admin/users/${id}/passed_exams`)
 		return response.data

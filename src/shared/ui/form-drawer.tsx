@@ -1,11 +1,12 @@
-import { Drawer, type DrawerProps, type FormInstance } from "antd"
+import type { ModalProps, FormInstance } from "antd"
+import { Modal } from "antd"
 import Button from "antd/es/button"
 import Flex from "antd/es/flex"
 import { type FC, useCallback, useEffect } from "react"
 import { type FormKeys, useFormDevtoolsStore } from "src/shared/store"
 import { useShallow } from "zustand/react/shallow"
 
-interface FormDrawerProps extends DrawerProps {
+interface FormDrawerProps extends ModalProps {
 	form: FormInstance
 	formKey?: FormKeys
 	formKeys?: FormKeys[]
@@ -40,14 +41,15 @@ const FormDrawer: FC<FormDrawerProps> = ({
 		}
 	}, [form, loading, onCloseDrawer, success])
 	return (
-		<Drawer
-			width={375}
+		<Modal
+			width={500}
 			open={
 				open && (formKeys ? formKeys?.includes(storeKey) : storeKey === formKey)
 			}
 			title={params ? "Изменить" : "Добавить"}
-			onClose={onCloseDrawer}
-			placement={"right"}
+			onCancel={() => onCloseDrawer()}
+			// placement={"right"}
+			centered={true}
 			styles={{
 				body: {
 					paddingBlock: 16

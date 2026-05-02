@@ -1,4 +1,4 @@
-import type { ResponseData, ResponseSingleData } from "src/shared/api"
+import type { Response, ResponseData, ResponseSingleData } from "src/shared/api"
 import { api } from "src/shared/api"
 import type { UserAnswer, Users } from "./users.type"
 import type { GetParams, ParamId } from "src/shared/types"
@@ -10,7 +10,7 @@ class UsersService {
 		return response.data
 	}
 	
-	getUsers = async (params: GetParams): Promise<ResponseData<User>> => {
+	getUsers = async (params: GetParams): Promise<Response<User>> => {
 		const response = await api.get("/admin/users", { params })
 		return response.data
 	}

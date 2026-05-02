@@ -1,21 +1,13 @@
 import { CameraOutlined } from "@ant-design/icons"
 import { useParams } from "@tanstack/react-router"
-import {
-	Button,
-	Card,
-	Empty,
-	Flex,
-	Image,
-	Spin,
-	Tag,
-	Upload
-} from "antd"
+import { Button, Card, Empty, Flex, Image, Spin, Tag, Upload } from "antd"
 import type { FC } from "react"
 import {
 	useAddImage,
 	useDeleteQuestion,
 	useGetAdminQuestions
 } from "src/entities/questions"
+import { useGetSubjectsQuery } from "src/entities/subjects"
 import {
 	SubjectGenerationButton,
 	SubjectQuestionsForm
@@ -33,6 +25,12 @@ export const SubjectQuestionsPage: FC = () => {
 	const { subjectId } = useParams({
 		strict: false
 	})
+	const { data: subjects } = useGetSubjectsQuery()
+
+	const subject = subjects?.data?.find(
+		(item) => Number(item?.id) === Number(subjectId)
+	)
+
 	const { mutate: deleteQuestion } = useDeleteQuestion()
 	const { mutate: addImage } = useAddImage()
 
@@ -51,7 +49,8 @@ export const SubjectQuestionsPage: FC = () => {
 		<>
 			<PageHeader
 				showBack={true}
-				title={"Вопросы предмета"}
+				title={"Вопросы предмета: " + subject?.name}
+				subtitle={subject?.description}
 				extra={[
 					<SubjectGenerationButton key={"generate"} />,
 					<AddButton text="Добавить вопрос" key={"add"} />,
@@ -122,7 +121,7 @@ export const SubjectQuestionsPage: FC = () => {
 											fontSize: "inherit"
 										}}
 										color={question?.is_correct ? "green" : "default"}
-										key={question.text}
+										key={question?.id}
 									>
 										{question.text}
 									</Tag>

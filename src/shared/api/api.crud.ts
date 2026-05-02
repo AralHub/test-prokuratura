@@ -73,7 +73,7 @@ export const useCrudQuery = <
 					...customError
 				})
 			}
-			throw e
+			return false
 		},
 		...queryOptions
 	})

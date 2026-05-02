@@ -51,6 +51,13 @@ export const useGetMeQuery = () => {
 	})
 }
 
+export const useAdminsQuery = () => {
+	return useCrudQuery({
+		queryFn: () => authService.getAdmins(),
+		queryKey: ["auth", "admins"]
+	})
+}
+
 export const useCreateMePhotoMutation = () =>
 	useCrudMutation({
 		mutationKey: ["auth", "photo"],

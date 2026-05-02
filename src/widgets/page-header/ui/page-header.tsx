@@ -1,11 +1,13 @@
 import { ArrowLeftOutlined } from "@ant-design/icons"
 import { useRouter } from "@tanstack/react-router"
-import { Breadcrumb, BreadcrumbProps, Flex, Space, Typography } from "antd"
+import type { BreadcrumbProps} from "antd"
+import { Breadcrumb, Flex, Space, Typography } from "antd"
 import { useResponsive } from "antd-style"
 import type { FC, ReactNode } from "react"
 
 interface PageHeaderProps {
 	title?: string
+	subtitle?: string
 	extra?: ReactNode
 	breadcrumb?: BreadcrumbProps["items"]
 	showBack?: boolean
@@ -17,22 +19,35 @@ const PageHeader: FC<PageHeaderProps> = ({
 	breadcrumb,
 	extra,
 	noSpace,
-	showBack
+	showBack,
+	subtitle
 }) => {
 	const { xs } = useResponsive()
 	const { history } = useRouter()
 
+	const subtitleComp = subtitle ? (
+		<Typography.Paragraph>{subtitle}</Typography.Paragraph>
+	) : null
+
 	const titleComp = title ? (
-		<Typography.Title level={xs ? 4 : 3}>
+		<Typography.Title level={xs ? 4 : 3} style={{ display: "flex" }}>
 			{showBack ? (
 				<ArrowLeftOutlined
 					style={{ marginRight: 20 }}
 					onClick={() => history.back()}
 				/>
 			) : null}
-			{title}
+			{subtitleComp ? (
+				<div>
+					{title}
+					{subtitleComp}
+				</div>
+			) : (
+				title
+			)}
 		</Typography.Title>
 	) : null
+
 	const extraComp = extra ? (
 		noSpace ? (
 			extra
@@ -60,4 +75,3 @@ const PageHeader: FC<PageHeaderProps> = ({
 }
 
 export { PageHeader }
-

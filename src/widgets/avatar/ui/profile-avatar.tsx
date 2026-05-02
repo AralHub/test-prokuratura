@@ -3,7 +3,7 @@ import {
 	LogoutOutlined,
 	UserOutlined
 } from "@ant-design/icons"
-import { useNavigate } from "@tanstack/react-router"
+import { useLocation, useNavigate } from "@tanstack/react-router"
 import Avatar from "antd/es/avatar"
 import Flex from "antd/es/flex"
 import Menu from "antd/es/menu"
@@ -22,6 +22,7 @@ interface ProfileAvatarProps {
 
 const ProfileAvatar: FC<ProfileAvatarProps> = () => {
 	const navigate = useNavigate()
+	const { pathname } = useLocation()
 	const auth = useAuth()
 	const { data: profile, isLoading } = useGetMeQuery()
 	const { mutate: logout, isPending, isSuccess } = useLogoutMutation()
@@ -66,7 +67,10 @@ const ProfileAvatar: FC<ProfileAvatarProps> = () => {
 				content={
 					<>
 						<Space>
-							<Avatar src={BASE_URL + profile?.data?.photo_url} icon={<UserOutlined />} />
+							<Avatar
+								src={BASE_URL + profile?.data?.photo_url}
+								icon={<UserOutlined />}
+							/>
 							<Flex vertical={true}>
 								<Typography.Text>
 									{isLoading ? "" : profile ? `${profile.data.name}` : ""}
@@ -79,12 +83,18 @@ const ProfileAvatar: FC<ProfileAvatarProps> = () => {
 						<Menu
 							style={{ backgroundColor: "inherit" }}
 							onSelect={(item) => onSelectMenu(item.key)}
+							selectedKeys={[pathname]}
 							items={[
 								{
 									type: "divider",
 									style: {
 										marginTop: 8
 									}
+								},
+								{
+									key: "/profile",
+									label: "Профиль",
+									icon: <UserOutlined />
 								},
 								{
 									key: "/logout",

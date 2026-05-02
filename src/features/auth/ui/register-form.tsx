@@ -1,18 +1,11 @@
 import { PhoneOutlined } from "@ant-design/icons"
 import { Link } from "@tanstack/react-router"
 import type { FormProps } from "antd"
-import {
-	App,
-	Button,
-	Form,
-	Input,
-	InputNumber,
-	Typography
-} from "antd"
+import { App, Button, Form, Input, InputNumber, Select, Typography } from "antd"
 import { useEffect, useState } from "react"
 import { useToken } from "src/shared/hooks"
 import { formatFormPhone, formatInputPhone } from "src/shared/utils"
-import { useRegisterMutation } from "../api/api"
+import { useAdminsQuery, useRegisterMutation } from "../api/api"
 import type { RegisterFormType } from "../model/types"
 import { VerifyForm } from "./verify-form"
 
@@ -26,6 +19,8 @@ export const RegisterForm = () => {
 	const {
 		token: { colorPrimary }
 	} = useToken()
+
+	const { data: admins, isLoading: adminsLoading } = useAdminsQuery()
 
 	const {
 		data: registerData,
@@ -100,6 +95,23 @@ export const RegisterForm = () => {
 					/>
 				</Form.Item>
 				<Form.Item<RegisterFormType>
+					label={"Наблюдатель"}
+					name={"admin_id"}
+					rules={[{ required: false }]}
+					initialValue={83}
+					hidden={true}
+				>
+					<Select
+						placeholder={"Наблюдатель"}
+						loading={adminsLoading}
+						allowClear={true}
+						options={admins?.data?.map((admin) => ({
+							value: admin.id,
+							label: admin.name
+						}))}
+					/>
+				</Form.Item>
+				<Form.Item<RegisterFormType>
 					label={"Пароль"}
 					name={"password"}
 					rules={[{ required: true }]}
@@ -123,23 +135,23 @@ export const RegisterForm = () => {
 						нашей Политикой конфиденциальности.
 					</Checkbox>
 				</Form.Item> */}
+				<Typography.Paragraph style={{ marginBottom: 24 }}>
+					У вас уже есть аккаунт?{" "}
+					<Link to="/auth/login" style={{ color: colorPrimary }}>
+						Войти
+					</Link>
+				</Typography.Paragraph>
+
 				<Form.Item noStyle={true}>
 					<Button
 						loading={registerLoading}
 						type={"primary"}
-						style={{ marginBlock: 8 }}
 						htmlType={"submit"}
 						block={true}
 					>
 						Регистрация
 					</Button>
 				</Form.Item>
-				<Typography.Paragraph>
-					У вас уже есть аккаунт?{" "}
-					<Link to="/auth/login" style={{ color: colorPrimary }}>
-						Войти
-					</Link>
-				</Typography.Paragraph>
 			</Form>
 			<VerifyForm
 				onCancel={onCancel}

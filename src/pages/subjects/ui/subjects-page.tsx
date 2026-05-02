@@ -4,16 +4,7 @@ import {
 	QuestionCircleOutlined
 } from "@ant-design/icons"
 import { Link } from "@tanstack/react-router"
-import {
-	Button,
-	Card,
-	Col,
-	Empty,
-	Row,
-	Spin,
-	Typography,
-	Upload
-} from "antd"
+import { Button, Card, Col, Empty, Row, Spin, Typography, Upload } from "antd"
 import { type FC } from "react"
 import {
 	useCreateSubjectsQuestionFile,
@@ -45,6 +36,13 @@ export const SubjectsPage: FC = () => {
 			<PageHeader
 				title={"Предметы"}
 				extra={[
+					<Button
+						children={"Образец документа"}
+						key={"document"}
+						icon={<FileAddOutlined />}
+						href={"/assets/test-platforma.docx"}
+						target={"_blank"}
+					/>,
 					<AddButton text={"Добавить предмет"} key={"add"} />,
 					<ReloadButton
 						loading={isFetching}
@@ -62,6 +60,7 @@ export const SubjectsPage: FC = () => {
 									variant={"outlined"}
 									actions={[
 										<Link
+											key={"View"}
 											to={"/subjects/$subjectId"}
 											params={{
 												subjectId: String(el?.id)
@@ -74,7 +73,9 @@ export const SubjectsPage: FC = () => {
 											/>
 										</Link>,
 										<Upload
+											key={"File"}
 											showUploadList={false}
+											accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 											beforeUpload={(file) => {
 												addFile({ subject_id: el.id, file })
 												return false
@@ -86,12 +87,14 @@ export const SubjectsPage: FC = () => {
 											/>
 										</Upload>,
 										<EditButton
+											key={"Edit"}
 											style={{}}
 											variant={"outlined"}
 											color={"orange"}
 											params={el}
 										/>,
 										<DeleteButton
+											key={"Delete"}
 											onConfirm={() => {
 												deleteSubject(el?.id)
 											}}
@@ -99,15 +102,24 @@ export const SubjectsPage: FC = () => {
 										/>
 									]}
 								>
-									<Typography.Title
-										level={4}
-										style={{ marginBottom: 8, minHeight: 60 }}
-									>
+									<Typography.Title level={4} style={{ marginBottom: 8 }}>
 										{el?.name}
 									</Typography.Title>
 									<div>
 										<QuestionCircleOutlined /> {el?.questions_count || 0}{" "}
 										вопросов
+									</div>
+									<div>
+										<Typography.Paragraph
+											ellipsis={{
+												rows: 4
+											}}
+											style={{
+												height: 60
+											}}
+										>
+											<blockquote>{el?.description}</blockquote>
+										</Typography.Paragraph>
 									</div>
 								</Card>
 							</Col>

@@ -3,6 +3,7 @@ import type { Role } from "src/shared/api"
 export type RegisterFormType = {
 	name: string
 	phone_number: string
+	admin_id: number
 	password: string
 }
 

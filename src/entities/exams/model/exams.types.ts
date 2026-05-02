@@ -51,7 +51,7 @@ export type FinishForm = {
 
 export type Answer = {
 	question_id: number
-	option_id: number
+	option_id?: number[]
 }
 
 export type TestResult = {
