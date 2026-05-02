@@ -77,6 +77,12 @@ export const useStartTest = () =>
 			})
 		}
 	})
+	
+export const useSubmitTest = () =>
+	useCrudMutation({
+		mutationFn: examsService.submit,
+		error: false
+	})
 
 export const useFinishTest = () =>
 	useCrudMutation({

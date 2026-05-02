@@ -87,7 +87,7 @@ interface UseCrudMutationOptions<
 > extends UseMutationOptions<TData, TError, TVariables, TContext> {
 	success?: ErrorMessage
 	renderSuccess?: (data: TData) => ErrorMessage
-	error?: ErrorMessage
+	error?: ErrorMessage | false
 	renderError?: (error: TError) => ErrorMessage
 	redirect?: ErrorRedirect
 	invalidate?: InvalidateQueryFilters
@@ -149,6 +149,7 @@ export const useCrudMutation = <
 							: e.message)
 				}
 			if (customError) {
+				if (error === false) return
 				message.error({
 					message: "Ошибка",
 					...customError

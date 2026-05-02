@@ -1,6 +1,6 @@
 import type { ResponseSingleData } from "src/shared/api"
 import { api, type ResponseData } from "src/shared/api"
-import type { Exam, FinishForm, Start, TestResult, Stats } from "./exams.types"
+import type { Exam, FinishForm, Start, TestResult, Stats, SubmitAnswer } from "./exams.types"
 import type { GetParams, ParamId } from "src/shared/types"
 
 class ExamsService {
@@ -49,6 +49,11 @@ class ExamsService {
 		...form
 	}: FinishForm): Promise<ResponseSingleData<TestResult>> => {
 		const response = await api.post(`/exams/${exam_id}/stop`, form)
+		return response.data
+	}
+	
+	submit = async (form: SubmitAnswer): Promise<ResponseSingleData<void>> => {
+		const response = await api.post(`/exams/submit_answer`, form)
 		return response.data
 	}
 	

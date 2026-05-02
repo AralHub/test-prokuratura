@@ -4,7 +4,7 @@ export type QuestionCreate = {
 	options: Variant[]
 	subject_id?: number
 	question_ids?: number[]
-	
+
 	type?: string
 	slots?: {
 		variantKey: string
@@ -24,6 +24,7 @@ export type Variant = {
 }
 
 export type QuestionsData = {
+	user_attempt_id: number
 	questions: Questions[]
 	started_at: string
 	ended_at: string

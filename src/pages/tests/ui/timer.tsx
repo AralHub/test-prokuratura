@@ -58,7 +58,7 @@ export const Timer: React.FC<TimerProps> = ({
 	}, [remainingSeconds])
 
 	useEffect(() => {
-		if (remainingSeconds && remainingSeconds <= 2 && !hasFinished.current) {
+		if (remainingSeconds && remainingSeconds <= 15 && !hasFinished.current) {
 			hasFinished.current = true
 			onFinish()
 		}

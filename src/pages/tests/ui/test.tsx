@@ -21,6 +21,7 @@ export const Test = () => {
 	const { data: questions, isLoading, isFetching } = useGetQuestionsList(testId)
 	const { mutate: finish, data: result, isSuccess, isPending } = useFinishTest()
 	const { mobile } = useResponsive()
+
 	const onChangeVariant = (answer: Answer) => {
 		setTestValues((prev) => [
 			...prev.filter((val) => val.question_id !== answer.question_id),

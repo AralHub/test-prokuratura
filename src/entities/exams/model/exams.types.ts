@@ -49,6 +49,12 @@ export type FinishForm = {
 	answers: Answer[]
 }
 
+export type SubmitAnswer = {
+	user_attempt_id?: number
+  question_id: number
+  selected_option_id: number[]
+}
+
 export type Answer = {
 	question_id: number
 	option_id?: number[]
