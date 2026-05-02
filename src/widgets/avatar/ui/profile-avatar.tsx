@@ -4,6 +4,7 @@ import {
 	UserOutlined
 } from "@ant-design/icons"
 import { useLocation, useNavigate } from "@tanstack/react-router"
+import { useResponsive } from "antd-style"
 import Avatar from "antd/es/avatar"
 import Flex from "antd/es/flex"
 import Menu from "antd/es/menu"
@@ -21,6 +22,8 @@ interface ProfileAvatarProps {
 }
 
 const ProfileAvatar: FC<ProfileAvatarProps> = () => {
+	const { mobile } = useResponsive()
+	
 	const navigate = useNavigate()
 	const { pathname } = useLocation()
 	const auth = useAuth()
@@ -125,6 +128,7 @@ const ProfileAvatar: FC<ProfileAvatarProps> = () => {
 					/>
 					<Typography.Text
 						strong={true}
+						hidden={mobile}
 						style={{ textTransform: "capitalize" }}
 					>
 						{profile?.data.name}

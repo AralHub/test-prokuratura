@@ -168,6 +168,8 @@ function RouteComponent() {
 	const navigate = useNavigate()
 	const { pathname } = useLocation()
 	const { isAuth, role } = useAuth()
+	
+	const isAdmin = getIsAdmin(role)
 
 	useEffect(() => {
 		setCollapsed(mobile ?? false)
@@ -175,7 +177,7 @@ function RouteComponent() {
 
 	return (
 		<Layout hasSider={true}>
-			{getIsAdmin(role) ? (
+			{isAdmin ? (
 				<>
 					<SiderbarContainer
 						collapsed={collapsed}
@@ -230,7 +232,7 @@ function RouteComponent() {
 								}}
 								selectedKeys={[pathname]}
 								items={
-									(getIsAdmin(role) ? itemsAdmin : items)?.map((el) => ({
+									(isAdmin ? itemsAdmin : items)?.map((el) => ({
 										...el,
 										style: {
 											marginBottom: 20
@@ -262,7 +264,7 @@ function RouteComponent() {
 						align={"center"}
 						style={{ height: "100%" }}
 					>
-						{getIsAdmin(role) ? (
+						{isAdmin ? (
 							<Button
 								onClick={() => setCollapsed((prev) => !prev)}
 								type={"text"}
@@ -289,7 +291,7 @@ function RouteComponent() {
 									height={64}
 									style={{ flexShrink: 0 }}
 								/>
-								<Flex vertical={true}>
+								<Flex vertical={true} hidden={mobile}>
 									<Title level={3} style={{ whiteSpace: "nowrap" }}>
 										Прокуратура
 									</Title>
