@@ -1,6 +1,6 @@
 import type { Response, ResponseData, ResponseSingleData } from "src/shared/api"
 import { api } from "src/shared/api"
-import type { UserAnswer, Users } from "./users.type"
+import type { UserAnswer, UserChange, Users } from "./users.type"
 import type { GetParams, ParamId } from "src/shared/types"
 import type { User } from "src/features/auth/model/types"
 
@@ -9,7 +9,7 @@ class UsersService {
 		const response = await api.get("/admin/users/attempts")
 		return response.data
 	}
-	
+
 	getUsers = async (params: GetParams): Promise<Response<User>> => {
 		const response = await api.get("/admin/users", { params })
 		return response.data
@@ -25,6 +25,14 @@ class UsersService {
 		params: GetParams
 	): Promise<ResponseData<UserAnswer>> => {
 		const response = await api.get(`/admin/users/${id}/answers`, { params })
+		return response.data
+	}
+
+	edit = async ({
+		id,
+		...form
+	}: UserChange): Promise<ResponseSingleData<Users>> => {
+		const response = await api.patch(`/superadmin/users/${id}`, form)
 		return response.data
 	}
 }

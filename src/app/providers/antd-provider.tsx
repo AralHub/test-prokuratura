@@ -37,6 +37,9 @@ const AntdProvider: FC<PropsWithChildren> = ({ children }) => {
 						},
 						Input: {
 							activeShadow: ""
+						},
+						Table: {
+							headerBg: token.colorBgContainer
 						}
 					}
 				}}

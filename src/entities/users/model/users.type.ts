@@ -13,6 +13,13 @@ export type Users = {
 	}[]
 }
 
+export type UserChange = {
+	id?: number | string
+	name?: string
+	admin_id?: number
+	is_active?: boolean
+}
+
 export type UserAnswer = {
 	question_id: number
 	question_text: string

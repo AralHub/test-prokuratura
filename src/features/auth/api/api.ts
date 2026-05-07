@@ -51,7 +51,7 @@ export const useGetMeQuery = () => {
 	})
 }
 
-export const useAdminsQuery = () => {
+export const useGetAdminsQuery = () => {
 	return useCrudQuery({
 		queryFn: () => authService.getAdmins(),
 		queryKey: ["auth", "admins"]

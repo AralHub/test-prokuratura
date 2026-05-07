@@ -5,7 +5,7 @@ import { App, Button, Form, Input, InputNumber, Select, Typography } from "antd"
 import { useEffect, useState } from "react"
 import { useToken } from "src/shared/hooks"
 import { formatFormPhone, formatInputPhone } from "src/shared/utils"
-import { useAdminsQuery, useRegisterMutation } from "../api/api"
+import { useGetAdminsQuery, useRegisterMutation } from "../api/api"
 import type { RegisterFormType } from "../model/types"
 import { VerifyForm } from "./verify-form"
 
@@ -20,7 +20,7 @@ export const RegisterForm = () => {
 		token: { colorPrimary }
 	} = useToken()
 
-	const { data: admins, isLoading: adminsLoading } = useAdminsQuery()
+	const { data: admins, isLoading: adminsLoading } = useGetAdminsQuery()
 
 	const {
 		data: registerData,

@@ -1,12 +1,15 @@
-import { useCrudQuery } from "src/shared/api"
+import { useCrudMutation, useCrudQuery } from "src/shared/api"
 import type { GetParams, ParamId } from "src/shared/types"
 import { userService } from "../model/users.service"
 
 export const useGetUsersList = () =>
 	useCrudQuery({ queryFn: userService.get, queryKey: ["users"] })
-	
+
 export const useGetUsers = (params: GetParams = {}) =>
-	useCrudQuery({ queryFn: () => userService.getUsers(params), queryKey: ["users", "info", ...Object.values(params)] })
+	useCrudQuery({
+		queryFn: () => userService.getUsers(params),
+		queryKey: ["users", "info", ...Object.values(params)]
+	})
 
 export const useGetUsersById = (id: ParamId) =>
 	useCrudQuery({
@@ -21,3 +24,16 @@ export const useGetUsersByIdAnswers = (id: ParamId, params: GetParams = {}) =>
 		queryKey: ["users", "user", "answers", id, ...Object.values(params)],
 		enabled: !!id && !!params.exam_id
 	})
+
+
+
+export const useEditUsersMutation = () => {
+	return useCrudMutation({
+		mutationFn: userService.edit,
+		mutationKey: ["users", "edit"],
+		invalidate: {
+			queryKey: ["users"]
+		},
+		success: {},
+	})
+}
