@@ -5,6 +5,7 @@ import {
 	HomeOutlined,
 	MenuOutlined,
 	OrderedListOutlined,
+	TeamOutlined,
 	UserAddOutlined
 } from "@ant-design/icons"
 import {
@@ -69,11 +70,11 @@ const itemsAdmin: MenuProps["items"] = [
 		icon: <BookOutlined style={{ fontSize: 16 }} />,
 		label: "Предметы"
 	},
-	// {
-	// 	key: "/users",
-	// 	icon: <TeamOutlined style={{ fontSize: 16 }} />,
-	// 	label: "Пользователи"
-	// },
+	{
+		key: "/users",
+		icon: <TeamOutlined style={{ fontSize: 16 }} />,
+		label: "Пользователи"
+	},
 	{
 		key: "/users-results",
 		icon: <UserAddOutlined style={{ fontSize: 16 }} />,

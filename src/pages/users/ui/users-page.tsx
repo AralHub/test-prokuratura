@@ -11,6 +11,7 @@ import { useState, type FC } from "react"
 import { useGetUsers } from "src/entities/users"
 import type { User } from "src/features/auth/model/types"
 import { BASE_URL } from "src/shared/config"
+import { useAuth } from "src/shared/hooks"
 import { ReloadButton } from "src/shared/ui"
 import { formatPhone } from "src/shared/utils"
 import { PageHeader } from "src/widgets/page-header"
@@ -20,6 +21,7 @@ const UsersPage: FC = () => {
 		current: 1,
 		pageSize: 10
 	})
+	const { role } = useAuth()
 
 	const {
 		data: users,
@@ -57,7 +59,7 @@ const UsersPage: FC = () => {
 		{
 			title: "Имя",
 			dataIndex: "name",
-			key: "name"
+			key: "name",
 		},
 		{
 			title: "Телефон",
@@ -124,6 +126,13 @@ const UsersPage: FC = () => {
 					{active ? "Активен" : "Не активен"}
 				</Tag>
 			)
+		},
+		{
+			title: "Админ",
+			dataIndex: "admin_id",
+			key: "admin_id",
+			hidden: role !== "superadmin",
+			render: (value) => value || "-"
 		}
 	]
 
